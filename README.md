@@ -1,5 +1,5 @@
-# cryptocurrency_trading
-script to analyze the cryptocurrency market in TradingView
+# Cryptocurrency Trading 
+Customized VuManChu Cipher A & B script to analyze and testing the cryptocurrency market in TradingView
 
 This script is open to the trading community, to customize and adapt different options on the original. Helping to have an indicator in different temporality and operations.
 
