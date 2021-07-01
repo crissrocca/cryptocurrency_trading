@@ -1,5 +1,3 @@
-// strategy("C2 Strategy", overlay=true, initial_capital=500, default_qty_type=strategy.percent_of_equity, default_qty_value=25)
-
 // This source code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
 // © DC
 //@version=4
@@ -39,28 +37,9 @@
 // NEW LINE * YELLOW * is a VWAP of high temporality 720 *
 // New icons to diamonds ref.   
 // ** Manual - https://onedrive.live.com/view.aspx?resid=5F4137EF811BEF21!7296&ithint=file%2Cdocx&authkey=!ANcOwjD5ys9AV1A
-// study(title = 'DC-B v2.5', shorttitle = 'DC-B v2.5')
-strategy("C2Mod Strategy", overlay = true, precision = 8, pyramiding = 0, initial_capital = 900, 
-     currency = currency.NONE, default_qty_type = strategy.cash, default_qty_value = 900, commission_type = "percent", commission_value = 0.04)
+study(title = 'DC-B v2.5', shorttitle = 'DC-B v2.5')
 
-// Make input options that configure backtest date range
-startDate = input(title="Start Date", type=input.integer,
-     defval=20, minval=1, maxval=31)
-startMonth = input(title="Start Month", type=input.integer,
-     defval=6, minval=1, maxval=12)
-startYear = input(title="Start Year", type=input.integer,
-     defval=2021, minval=1800, maxval=2100)
 
-endDate = input(title="End Date", type=input.integer,
-     defval=31, minval=1, maxval=31)
-endMonth = input(title="End Month", type=input.integer,
-     defval=12, minval=1, maxval=12)
-endYear = input(title="End Year", type=input.integer,
-     defval=2022, minval=1800, maxval=2100)
-
-inDateRange = (time >= timestamp(syminfo.timezone, startYear,
-         startMonth, startDate, 0, 0)) and
-     (time < timestamp(syminfo.timezone, endYear, endMonth, endDate, 0, 0))
 // PARAMETERS {
 
 // WaveTrend
@@ -192,9 +171,10 @@ colormacdWT2d = #770000
 // FUNCTIONS {
   
 // Divergences 
-f_top_fractal(src) => src[4] < src[2] and src[3] < src[2] and src[2] > src[1] and src[2] > src[0]
-f_bot_fractal(src) => src[4] > src[2] and src[3] > src[2] and src[2] < src[1] and src[2] < src[0]
-f_fractalize(src) => f_top_fractal(src) ? 1 : f_bot_fractal(src) ? -1 : 0
+//f_top_fractal(src) => src[4] < src[2] and src[3] < src[2] and src[2] > src[1] and src[2] > src[0]
+//f_bot_fractal(src) => src[4] > src[2] and src[3] > src[2] and src[2] < src[1] and src[2] < src[0]
+f_fractalize(src)  => src[4] < src[2] and src[3] < src[2] and src[2] > src[1] and src[2] > src[0] ? 1 :
+                      src[4] > src[2] and src[3] > src[2] and src[2] < src[1] and src[2] < src[0] ? -1 : 0
 
 f_findDivs(src, topLimit, botLimit, useLimits) =>
     fractalTop = f_fractalize(src) > 0 and (useLimits ? src[2] >= topLimit : true) ? src[2] : na
@@ -285,7 +265,7 @@ f_getTFCandle(_tf) =>
     _close = security(heikinashi(syminfo.tickerid), _tf, close, barmerge.gaps_off, barmerge.lookahead_on)
     _high  = security(heikinashi(syminfo.tickerid), _tf, high, barmerge.gaps_off, barmerge.lookahead_on)
     _low   = security(heikinashi(syminfo.tickerid), _tf, low, barmerge.gaps_off, barmerge.lookahead_on)
-    hl2   = (_high + _low) / 2.0
+    _hl2   = (_high + _low) / 2.0
     newBar = change(_open)
     candleBodyDir = _close > _open
     [candleBodyDir, newBar]
@@ -428,20 +408,20 @@ bgcolor(darkMode ? color.new(#000000, 80) : na)
 zLine = plot(0, color = color.new(colorWhite, 0))
 
 //  MFI BAR - Barra inferior a la grafica
-rsiMfiBarTopLine = plot(rsiMFIShow ? -95 : na, title = 'MFI Bar TOP Line', transp = 100)
-rsiMfiBarBottomLine = plot(rsiMFIShow ? -99 : na, title = 'MFI Bar BOTTOM Line', transp = 100)
-fill(rsiMfiBarTopLine, rsiMfiBarBottomLine, title = 'MFI Bar Colors', color = rsiMFIColor, transp = 75)
+rsiMfiBarTopLine = plot(rsiMFIShow ? -95 : na, title = 'MFI Bar TOP Line')
+rsiMfiBarBottomLine = plot(rsiMFIShow ? -99 : na, title = 'MFI Bar BOTTOM Line')
+fill(rsiMfiBarTopLine, rsiMfiBarBottomLine, title = 'MFI Bar Colors', color = color.new(rsiMFIColor,75))
 
 // WT Areas
-plot(wtShow ? wt1 : na, style = plot.style_area, title = 'WT Wave 1', color = macdWTColorsShow ? macdWT1Color : colorWT1, transp = 0)
-plot(wtShow ? wt2 : na, style = plot.style_area, title = 'WT Wave 2', color = macdWTColorsShow ? macdWT2Color : darkMode ? colorWT2_ : colorWT2 , transp = 20)
+plot(wtShow ? wt1 : na, style = plot.style_area, title = 'WT Wave 1', color = macdWTColorsShow ? macdWT1Color : color.new(colorWT1,0))
+plot(wtShow ? wt2 : na, style = plot.style_area, title = 'WT Wave 2', color = macdWTColorsShow ? macdWT2Color : darkMode ? colorWT2_ : color.new(colorWT2,20))
 
 // VWAP
-plot(vwapShow ? wtVwap : na, title = 'VWAP', color = colorYellow, style = plot.style_area, linewidth = 2, transp = 45)
+plot(vwapShow ? wtVwap : na, title = 'VWAP', color = color.new(colorYellow,45), style = plot.style_area, linewidth = 2)
 
 // MFI AREA - Cash Flow
-rsiMFIplot = plot(rsiMFIShow ? rsiMFI: na, title = 'RSI+MFI Area', color = rsiMFIColor, transp = 20)
-fill(rsiMFIplot, zLine, rsiMFIColor, transp = 60)
+rsiMFIplot = plot(rsiMFIShow ? rsiMFI: na, title = 'RSI+MFI Area', color = color.new(rsiMFIColor, 20))
+fill(rsiMFIplot, zLine, color.new(rsiMFIColor,60) )
 
 // WT Div
 
@@ -453,7 +433,7 @@ plot(series = wtFractalTop_add ? wt2[2] : na, title = 'WT 2nd Bearish Divergence
 plot(series = wtFractalBot_add ? wt2[2] : na, title = 'WT 2nd Bullish Divergence', color = wtBullDivColor_add, linewidth = 2, offset = -2)
 
 // RSI
-plot(rsiShow ? rsi : na, title = 'RSI', color = rsiColor, linewidth = 2, transp = 25)
+plot(rsiShow ? rsi : na, title = 'RSI', color = color.new(rsiColor,25), linewidth = 2)
 
 // RSI Div
 plot(series = rsiFractalTop ? rsi[2] : na, title='RSI Bearish Divergence', color = rsiBearDivColor, linewidth = 1, offset = -2)
@@ -475,32 +455,32 @@ plot(tcLine ? tcVal : na, color = color.new(colorWhite, 50), linewidth = 1, titl
 
 
 // Draw Overbought & Oversold lines
-plot(obLevel, title = 'Over Bought Level 1', color = colorWhite, linewidth = 1, style = plot.style_cross, transp = 35)
-plot(obLevel2, title = 'Over Bought Level 2', color = colorWhite, linewidth = 1, style = plot.style_stepline, transp = 0)
-plot(obLevel3, title = 'Over Bought Level 3', color = colorWhite, linewidth = 1, style = plot.style_stepline, transp = 35)
+plot(obLevel, title = 'Over Bought Level 1', color = color.new(colorWhite,35), linewidth = 1, style = plot.style_cross)
+plot(obLevel2, title = 'Over Bought Level 2', color = color.new(colorWhite,0), linewidth = 1, style = plot.style_stepline)
+plot(obLevel3, title = 'Over Bought Level 3', color = color.new(colorWhite,35), linewidth = 1, style = plot.style_stepline)
 
-plot(osLevel, title = 'Over Sold Level 1', color = colorWhite, linewidth = 1, style = plot.style_cross, transp = 35)
-plot(osLevel2, title = 'Over Sold Level 2', color = colorWhite, linewidth = 1, style = plot.style_stepline, transp = 0)
+plot(osLevel, title = 'Over Sold Level 1', color = color.new(colorWhite,35), linewidth = 1, style = plot.style_cross)
+plot(osLevel2, title = 'Over Sold Level 2', color = color.new(colorWhite,0), linewidth = 1, style = plot.style_stepline)
 
 // Sommi flag
-plotchar(sommiFlagShow and sommiBearish ? 108 : na, title = 'Sommi bearish flag', char='⚑', color = colorPink, location = location.absolute, size = size.tiny, transp = 0)
-plotchar(sommiFlagShow and sommiBullish ? -108 : na, title = 'Sommi bullish flag', char='⚑', color = colorBluelight, location = location.absolute, size = size.tiny, transp = 0)
-plot(sommiShowVwap ? ema(hvwap, 3) : na, title = 'Sommi higher VWAP', color = #e5ff00, linewidth = 1, style = plot.style_line, transp = 15)
+plotchar(sommiFlagShow and sommiBearish ? 108 : na, title = 'Sommi bearish flag', char='⚑', color = color.new(colorPink,0), location = location.absolute, size = size.tiny)
+plotchar(sommiFlagShow and sommiBullish ? -108 : na, title = 'Sommi bullish flag', char='⚑', color = color.new(colorBluelight,0), location = location.absolute, size = size.tiny)
+plot(sommiShowVwap ? ema(hvwap, 3) : na, title = 'Sommi higher VWAP', color = color.new(#e5ff00,15), linewidth = 1, style = plot.style_line)
 
 // Sommi diamond
-plotchar(sommiDiamondShow and sommiBearishDiamond ? 108 : na, title = 'Sommi bearish diamond', char='🩸', color = colorPink, location = location.absolute, size = size.tiny, transp = 0)
-plotchar(sommiDiamondShow and sommiBullishDiamond ? -108 : na, title = 'Sommi bullish diamond', char='🚀', color = colorBluelight, location = location.absolute, size = size.tiny, transp = 0)
+plotchar(sommiDiamondShow and sommiBearishDiamond ? 108 : na, title = 'Sommi bearish diamond', char='🩸', color = color.new(colorPink,0), location = location.absolute, size = size.tiny)
+plotchar(sommiDiamondShow and sommiBullishDiamond ? -108 : na, title = 'Sommi bullish diamond', char='🚀', color = color.new(colorBluelight,0), location = location.absolute, size = size.tiny)
 
 // Circles
-plot(wtCross ? wt2 : na, title = 'Buy and sell circle', color = signalColor, style = plot.style_circles, linewidth = 3, transp = 15)
+plot(wtCross ? wt2 : na, title = 'Buy and sell circle', color = color.new(signalColor,15), style = plot.style_circles, linewidth = 3)
 
-plotchar(wtBuyShow and buySignal ? -107 : na, title = 'Buy circle', char='·', color = colorGreen, location = location.absolute, size = size.small, transp = 50)
-plotchar(wtSellShow and sellSignal ? 105 : na , title = 'Sell circle', char='·', color = colorRed, location = location.absolute, size = size.small, transp = 50)
+plotchar(wtBuyShow and buySignal ? -107 : na, title = 'Buy circle', char='·', color = color.new(colorGreen,50), location = location.absolute, size = size.small)
+plotchar(wtSellShow and sellSignal ? 105 : na , title = 'Sell circle', char='·', color = color.new(colorRed,50), location = location.absolute, size = size.small)
 
-plotchar(wtDivShow and buySignalDiv ? -106 : na, title = 'Divergence buy circle', char='•', color = buySignalDiv_color, location = location.absolute, size = size.small, offset = -2, transp = 15)
-plotchar(wtDivShow and sellSignalDiv ? 106 : na, title = 'Divergence sell circle', char='•', color = sellSignalDiv_color, location = location.absolute, size = size.small, offset = -2, transp = 15)
+plotchar(wtDivShow and buySignalDiv ? -106 : na, title = 'Divergence buy circle', char='•', color = color.new(buySignalDiv_color,15), location = location.absolute, size = size.small, offset = -2)
+plotchar(wtDivShow and sellSignalDiv ? 106 : na, title = 'Divergence sell circle', char='•', color = color.new(sellSignalDiv_color,15), location = location.absolute, size = size.small, offset = -2)
 
-plotchar(wtGoldBuy and wtGoldShow ? -106 : na, title = 'Gold  buy gold circle', char='•', color = #fafa11, location = location.absolute, size = size.small, offset = -2, transp = 0)
+plotchar(wtGoldBuy and wtGoldShow ? -106 : na, title = 'Gold  buy gold circle', char='•', color = color.new(#fafa11,0), location = location.absolute, size = size.small, offset = -2)
 
 hline(0, title="Zero", color=#888888, linestyle=hline.style_solid)
 
@@ -510,39 +490,16 @@ hline(0, title="Zero", color=#888888, linestyle=hline.style_solid)
 // ALERTS {
   
 // BUY
-// alertcondition(buySignal, 'Buy (Big green circle)', 'Green circle WaveTrend Oversold')
-// alertcondition(buySignalDiv, 'Buy (Big green circle + Div)', 'Buy & WT Bullish Divergence & WT Overbought')
-// alertcondition(wtGoldBuy, 'GOLD Buy (Big GOLDEN circle)', 'Green & GOLD circle WaveTrend Overbought')
-// alertcondition(sommiBullish or sommiBullishDiamond, 'Sommi bullish flag/diamond', 'Blue flag/diamond')
-// alertcondition(wtCross and wtCrossUp, 'Buy (Small green dot)', 'Buy small circle')
+alertcondition(buySignal, 'Buy (Big green circle)', 'Green circle WaveTrend Oversold')
+alertcondition(buySignalDiv, 'Buy (Big green circle + Div)', 'Buy & WT Bullish Divergence & WT Overbought')
+alertcondition(wtGoldBuy, 'GOLD Buy (Big GOLDEN circle)', 'Green & GOLD circle WaveTrend Overbought')
+alertcondition(sommiBullish or sommiBullishDiamond, 'Sommi bullish flag/diamond', 'Blue flag/diamond')
+alertcondition(wtCross and wtCrossUp, 'Buy (Small green dot)', 'Buy small circle')
 
 // SELL
-// alertcondition(sommiBearish or sommiBearishDiamond, 'Sommi bearish flag/diamond', 'Purple flag/diamond')
-// alertcondition(sellSignal, 'Sell (Big red circle)', 'Red Circle WaveTrend Overbought')
-// alertcondition(sellSignalDiv, 'Sell (Big red circle + Div)', 'Buy & WT Bearish Divergence & WT Overbought')
-// alertcondition(wtCross and wtCrossDown, 'Sell (Small red dot)', 'Sell small circle')
+alertcondition(sommiBearish or sommiBearishDiamond, 'Sommi bearish flag/diamond', 'Purple flag/diamond')
+alertcondition(sellSignal, 'Sell (Big red circle)', 'Red Circle WaveTrend Overbought')
+alertcondition(sellSignalDiv, 'Sell (Big red circle + Div)', 'Buy & WT Bearish Divergence & WT Overbought')
+alertcondition(wtCross and wtCrossDown, 'Sell (Small red dot)', 'Sell small circle')
 
 // } ALERTS
-
-stopPer = input(1.0, title='Stop Loss %', type=input.float) / 100
-takePer = input(6.0, title='Take Profit %', type=input.float) / 100
-
-// longStop = 0.0, shortStop = 0.0
-// Determine where you've entered and in what direction
-// longStop := max(close * (1 - stopPer), na(longStop[1]) ? 0 : longStop[1])
-// shortStop := min(close * (1 + stopPer), na(shortStop[1]) ? 999999999 : shortStop[1])
-
-longStop = strategy.position_avg_price * (1 - stopPer)
-shortStop = strategy.position_avg_price * (1 + stopPer)
-shortTake = strategy.position_avg_price * (1 - takePer)
-longTake = strategy.position_avg_price * (1 + takePer)
-
-if (inDateRange)
-    strategy.close("go long", when=sellSignalDiv)
-    strategy.close("go short", when=buySignalDiv)
-    strategy.entry("go long", strategy.long, when=sommiBullishDiamond)
-    strategy.entry("go short", strategy.short, when=sommiBearishDiamond)
-    strategy.exit("long exit", "go long", stop=longStop, limit=longTake)
-    strategy.exit("short exit", "go short", stop=shortStop, limit=shortTake)
-    // strategy.exit("long exit", "go long", profit=close*_tp/syminfo.mintick, loss=close * _sl/syminfo.mintick)
-    // strategy.exit("short exit", "go short", profit=close*_tp/syminfo.mintick, loss=close * _sl/syminfo.mintick)
