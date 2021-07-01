@@ -37,10 +37,8 @@
 // I add white line in the 0 continues until the end
 // NEW LINE * YELLOW * is a VWAP of high temporality 720 *
 // New icons to diamonds ref.   
-// ** Manual - https://onedrive.live.com/view.aspx?resid=5F4137EF811BEF21!7296&ithint=file%2Cdocx&authkey=!ANcOwjD5ys9AV1A
-study(title = 'DC-B v2.5', shorttitle = 'DC-B v2.5')
-
-
+study(title = 'DC-B 3', shorttitle = 'DC-B 3')
+//Version 1.2
 // PARAMETERS {
 
 // WaveTrend
@@ -95,14 +93,14 @@ rsiDivOBLevel = input(70, title = 'RSI Bearish Divergence min', type = input.int
 rsiDivOSLevel = input(30, title = 'RSI Bullish Divergence min', type = input.integer)
 
 // RSI Stochastic
-stochShow = input(false, title = 'Show Stochastic RSI', type = input.bool)
-stochUseLog = input(false, title=' Use Log?', type = input.bool)
-stochAvg = input(false, title='Use Average of both K & D', type = input.bool)
+stochShow = input(true, title = 'Show Stochastic RSI', type = input.bool)
+stochUseLog = input(true, title=' Use Log?', type = input.bool)
+stochAvg = input(true, title='Use Average of both K & D', type = input.bool)
 stochSRC = input(close, title = 'Stochastic RSI Source', type = input.source)
 stochLen = input(14, title = 'Stochastic RSI Length', type = input.integer)
 stochRsiLen = input(14, title = 'RSI Length ', type = input.integer)
-stochKSmooth = input(1, title = 'Stochastic RSI K Smooth', type = input.integer)
-stochDSmooth = input(2, title = 'Stochastic RSI D Smooth', type = input.integer)
+stochKSmooth = input(3, title = 'Stochastic RSI K Smooth', type = input.integer)
+stochDSmooth = input(3, title = 'Stochastic RSI D Smooth', type = input.integer)
 
 // Divergence stoch
 stochShowDiv = input(false, title = 'Show Stoch Regular Divergences', type = input.bool)
@@ -174,8 +172,10 @@ colormacdWT2d = #770000
 // Divergences 
 //f_top_fractal(src) => src[4] < src[2] and src[3] < src[2] and src[2] > src[1] and src[2] > src[0]
 //f_bot_fractal(src) => src[4] > src[2] and src[3] > src[2] and src[2] < src[1] and src[2] < src[0]
-f_fractalize(src)  => src[4] < src[2] and src[3] < src[2] and src[2] > src[1] and src[2] > src[0] ? 1 :
-                      src[4] > src[2] and src[3] > src[2] and src[2] < src[1] and src[2] < src[0] ? -1 : 0
+//f_fractalize(src) => f_top_fractal(src) ? 1 : f_bot_fractal(src) ? -1 : 0
+f_fractalize(src) => src[4] < src[2] and src[3] < src[2] and src[2] > src[1] and src[2] > src[0] ? 1 :
+                     src[4] > src[2] and src[3] > src[2] and src[2] < src[1] and src[2] < src[0] ? -1 : 0
+
 
 f_findDivs(src, topLimit, botLimit, useLimits) =>
     fractalTop = f_fractalize(src) > 0 and (useLimits ? src[2] >= topLimit : true) ? src[2] : na
@@ -314,7 +314,7 @@ rsiColor = rsi <= rsiOversold ? colorGreen : rsi >= rsiOverbought ? colorRed : c
 
 // RSI + MFI Area
 rsiMFI = f_rsimfi(rsiMFIperiod, rsiMFIMultiplier, timeframe.period)
-rsiMFIColor = rsiMFI > 0 ? #3ee145 : #ff3d2e
+rsiMFIColor = rsiMFI > 0 ? color.new(#3ee145,50) : color.new(#ff3d2e,50)
 
 // Calculates WaveTrend
 [wt1, wt2, wtOversold, wtOverbought, wtCross, wtCrossUp, wtCrossDown, wtCross_last, wtCrossUp_last, wtCrossDown_last, wtVwap] = f_wavetrend(wtMASource, wtChannelLen, wtAverageLen, wtMALen, timeframe.period)
@@ -409,20 +409,20 @@ bgcolor(darkMode ? color.new(#000000, 80) : na)
 zLine = plot(0, color = color.new(colorWhite, 0))
 
 //  MFI BAR - Barra inferior a la grafica
-rsiMfiBarTopLine = plot(rsiMFIShow ? -95 : na, title = 'MFI Bar TOP Line')
-rsiMfiBarBottomLine = plot(rsiMFIShow ? -99 : na, title = 'MFI Bar BOTTOM Line')
-fill(rsiMfiBarTopLine, rsiMfiBarBottomLine, title = 'MFI Bar Colors', color = color.new(rsiMFIColor,75))
+rsiMfiBarTopLine = plot(rsiMFIShow ? -95 : na, title = 'MFI Bar TOP Line') //, transp = 70)
+rsiMfiBarBottomLine = plot(rsiMFIShow ? -99 : na, title = 'MFI Bar BOTTOM Line') //, transp = 70)
+fill(rsiMfiBarTopLine, rsiMfiBarBottomLine, title = 'MFI Bar Colors', color = rsiMFIColor)//, transp = 75)
 
 // WT Areas
-plot(wtShow ? wt1 : na, style = plot.style_area, title = 'WT Wave 1', color = macdWTColorsShow ? macdWT1Color : color.new(colorWT1,0))
-plot(wtShow ? wt2 : na, style = plot.style_area, title = 'WT Wave 2', color = macdWTColorsShow ? macdWT2Color : darkMode ? colorWT2_ : color.new(colorWT2,20))
+plot(wtShow ? wt1 : na, style = plot.style_area, title = 'WT Wave 1', color = macdWTColorsShow ? macdWT1Color : colorWT1) //, transp = 0)
+plot(wtShow ? wt2 : na, style = plot.style_area, title = 'WT Wave 2', color = macdWTColorsShow ? macdWT2Color : darkMode ? colorWT2_ : colorWT2) //, transp = 20)
 
 // VWAP
 plot(vwapShow ? wtVwap : na, title = 'VWAP', color = color.new(colorYellow,45), style = plot.style_area, linewidth = 2)
 
 // MFI AREA - Cash Flow
-rsiMFIplot = plot(rsiMFIShow ? rsiMFI: na, title = 'RSI+MFI Area', color = color.new(rsiMFIColor, 20))
-fill(rsiMFIplot, zLine, color.new(rsiMFIColor,60) )
+rsiMFIplot = plot(rsiMFIShow ? rsiMFI: na, title = 'RSI+MFI Area', color = rsiMFIColor) //, transp = 20)
+fill(rsiMFIplot, zLine, rsiMFIColor) //, transp = 60)
 
 // WT Div
 
@@ -434,7 +434,7 @@ plot(series = wtFractalTop_add ? wt2[2] : na, title = 'WT 2nd Bearish Divergence
 plot(series = wtFractalBot_add ? wt2[2] : na, title = 'WT 2nd Bullish Divergence', color = wtBullDivColor_add, linewidth = 2, offset = -2)
 
 // RSI
-plot(rsiShow ? rsi : na, title = 'RSI', color = color.new(rsiColor,25), linewidth = 2)
+plot(rsiShow ? rsi : na, title = 'RSI', color = rsiColor, linewidth = 2) //, transp = 25)
 
 // RSI Div
 plot(series = rsiFractalTop ? rsi[2] : na, title='RSI Bearish Divergence', color = rsiBearDivColor, linewidth = 1, offset = -2)
@@ -442,8 +442,8 @@ plot(series = rsiFractalBot ? rsi[2] : na, title='RSI Bullish Divergence', color
 
 // Stochastic RSI
 stochKplot = plot(stochShow ? stochK : na, title = 'Stoch K', color = color.new(#21baf3, 0), linewidth = 1)
-stochDplot = plot(stochShow ? stochD : na, title = 'Stoch D', color = color.new(#673ab7, 100), linewidth = 1)
-stochFillColor = stochK >= stochD ? color.new(#21baf3, 100) : color.new(#673ab7, 100)
+stochDplot = plot(stochShow ? stochD : na, title = 'Stoch D', color = color.new(#673ab7, 0), linewidth = 1)
+stochFillColor = stochK >= stochD ? color.new(#25a69c, 20) : color.new(#ee534f, 35)
 fill(stochKplot, stochDplot, title='KD Fill', color=stochFillColor)
 
 // Stoch Div
@@ -466,24 +466,29 @@ plot(osLevel2, title = 'Over Sold Level 2', color = color.new(colorWhite,0), lin
 // Sommi flag
 plotchar(sommiFlagShow and sommiBearish ? 108 : na, title = 'Sommi bearish flag', char='⚑', color = color.new(colorPink,0), location = location.absolute, size = size.tiny)
 plotchar(sommiFlagShow and sommiBullish ? -108 : na, title = 'Sommi bullish flag', char='⚑', color = color.new(colorBluelight,0), location = location.absolute, size = size.tiny)
-plot(sommiShowVwap ? ema(hvwap, 3) : na, title = 'Sommi higher VWAP', color = color.new(#e5ff00,15), linewidth = 1, style = plot.style_line)
+
+// Linea larga VWAP
+plot(sommiShowVwap ? ema(hvwap, 3) : na, title = 'Sommi higher VWAP', color = color.new(#B600FF,15), linewidth = 1, style = plot.style_stepline)
 
 // Sommi diamond
 plotchar(sommiDiamondShow and sommiBearishDiamond ? 108 : na, title = 'Sommi bearish diamond', char='🩸', color = color.new(colorPink,0), location = location.absolute, size = size.tiny)
 plotchar(sommiDiamondShow and sommiBullishDiamond ? -108 : na, title = 'Sommi bullish diamond', char='🚀', color = color.new(colorBluelight,0), location = location.absolute, size = size.tiny)
 
 // Circles
-plot(wtCross ? wt2 : na, title = 'Buy and sell circle', color = color.new(signalColor,15), style = plot.style_circles, linewidth = 3)
+plot(wtCross ? wt2 : na, title = 'Buy and sell circle', color = signalColor, style = plot.style_circles, linewidth = 3) //, transp = 15)
 
 plotchar(wtBuyShow and buySignal ? -107 : na, title = 'Buy circle', char='·', color = color.new(colorGreen,50), location = location.absolute, size = size.small)
 plotchar(wtSellShow and sellSignal ? 105 : na , title = 'Sell circle', char='·', color = color.new(colorRed,50), location = location.absolute, size = size.small)
 
-plotchar(wtDivShow and buySignalDiv ? -106 : na, title = 'Divergence buy circle', char='•', color = color.new(buySignalDiv_color,15), location = location.absolute, size = size.small, offset = -2)
-plotchar(wtDivShow and sellSignalDiv ? 106 : na, title = 'Divergence sell circle', char='•', color = color.new(sellSignalDiv_color,15), location = location.absolute, size = size.small, offset = -2)
+
+plotchar(wtDivShow and buySignalDiv ? -106 : na, title = 'Divergence buy circle', char='•', color = buySignalDiv_color, location = location.absolute, size = size.small, offset = -2 )
+plotchar(wtDivShow and sellSignalDiv ? 106 : na, title = 'Divergence sell circle', char='•', color = sellSignalDiv_color, location = location.absolute, size = size.small, offset = -2 )
 
 plotchar(wtGoldBuy and wtGoldShow ? -106 : na, title = 'Gold  buy gold circle', char='•', color = color.new(#fafa11,0), location = location.absolute, size = size.small, offset = -2)
 
 hline(0, title="Zero", color=#888888, linestyle=hline.style_solid)
+
+
 
 // } DRAW
 
@@ -494,11 +499,11 @@ hline(0, title="Zero", color=#888888, linestyle=hline.style_solid)
 alertcondition(buySignal, 'Buy (Big green circle)', 'Green circle WaveTrend Oversold')
 alertcondition(buySignalDiv, 'Buy (Big green circle + Div)', 'Buy & WT Bullish Divergence & WT Overbought')
 alertcondition(wtGoldBuy, 'GOLD Buy (Big GOLDEN circle)', 'Green & GOLD circle WaveTrend Overbought')
-alertcondition(sommiBullish or sommiBullishDiamond, 'Sommi bullish flag/diamond', 'Blue flag/diamond')
+alertcondition(sommiBullishDiamond, 'Sommi bullish diamond', 'Blue diamond')
 alertcondition(wtCross and wtCrossUp, 'Buy (Small green dot)', 'Buy small circle')
 
 // SELL
-alertcondition(sommiBearish or sommiBearishDiamond, 'Sommi bearish flag/diamond', 'Purple flag/diamond')
+alertcondition(sommiBearishDiamond, 'Sommi bearish diamond', 'Purple diamond')
 alertcondition(sellSignal, 'Sell (Big red circle)', 'Red Circle WaveTrend Overbought')
 alertcondition(sellSignalDiv, 'Sell (Big red circle + Div)', 'Buy & WT Bearish Divergence & WT Overbought')
 alertcondition(wtCross and wtCrossDown, 'Sell (Small red dot)', 'Sell small circle')
