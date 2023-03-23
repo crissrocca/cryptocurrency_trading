@@ -16,9 +16,6 @@ Any change to this script must respect the acknowledgments to the original vuman
 
 Peace!
 
-Referal to get a bonus of 30USD: https://es.tradingview.com/gopro/?share_your_love=Crissrocca
-
-
 _________________________________________________________________________________________________________________________________
 
 
@@ -38,5 +35,3 @@ Gracias a Dynausmaux por el código basado en el Cipher_A original de falconCoin
 Recuerda, cualquier cambio a este script debe respetar los reconocimientos del script vumanchu original y su venta e integración en sistemas de software está prohibida. Esto se ha creado para que la comunidad pueda realizar pruebas en el gráfico de TradingView (https://tradingview.com/) en ningún momento se utilizará para ningún otro propósito. Compruebe siempre los parámetros de licencia incluidos.
 
 ¡Paz!
-
-Referal para obtener un bono de 30 USD: https://es.tradingview.com/gopro/?share_your_love=Crissrocca
