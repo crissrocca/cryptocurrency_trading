@@ -7,7 +7,7 @@ Remember, we don't and you can't make money out of this. Use it as a test to lea
 
 The original code of the script is published by © vumanchu 
 https://www.tradingview.com/script/9hWqVcG9-VuManChu-Cipher-A/
-https://www.tradingview.com/script/Msm4SjwI-VuManChu-Cipher- B-Divergences
+https://www.tradingview.com/script/Msm4SjwI-VuManChu-Cipher-B-Divergences
 on TradingView (open source license - Mozilla Public License 2.0 license at https://mozilla.org/MPL/2.0/).
 
 Thanks to Dynausmaux for the code based on the original Cipher_A from falconCoin https://www.tradingview.com/script/cAw5GEAB-Market-Cipher-A-free-version-1-1/ Thanks to LazyBear for WaveTrend Oscillator https://www.tradingview.com/script/2KE8wTuF-Indicator-WaveTrend-Oscillator-WT/
@@ -28,7 +28,7 @@ Recuerda, nosotros no lo creamos y no puedes ganar dinero con esto. Úsalo como 
 
 El código original del script publicado por © vumanchu en TradingView (licencia de código abierto - licencia Mozilla Public License 2.0 en https://mozilla.org/MPL/2.0/).
 https://www.tradingview.com/script/9hWqVcG9-VuManChu-Cipher-A/
-https://www.tradingview.com/script/Msm4SjwI-VuManChu-Cipher- B-Divergences
+https://www.tradingview.com/script/Msm4SjwI-VuManChu-Cipher-B-Divergences
 
 Gracias a Dynausmaux por el código basado en el Cipher_A original de falconCoin https://www.tradingview.com/script/cAw5GEAB-Market-Cipher-A-free-version-1-1/ Gracias a LazyBear por WaveTrend Oscillator https://www.tradingview.com/script/2KE8wTuF-Indicator-WaveTrend-Oscillator-WT/
 
